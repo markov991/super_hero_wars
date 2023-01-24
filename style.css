@@ -1,0 +1,146 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  line-height: 1;
+  font-weight: 400;
+  color: rgb(233, 233, 233);
+}
+
+footer {
+  background-color: black;
+  color: aliceblue;
+  font-size: 1.6rem;
+  text-align: center;
+  padding: 1.2rem;
+}
+
+.section-header {
+  width: 100%;
+
+  background-color: #333;
+}
+.app-title {
+  color: aliceblue;
+
+  font-weight: 500;
+  text-align: center;
+  font-size: 2.4rem;
+  padding: 0.8rem;
+}
+
+.main-content-screen {
+  background-image: linear-gradient(rgba(1, 1, 1, 0.3), rgba(1, 1, 1, 0.3)),
+    url("/img/background--img.jpg");
+  height: 95vh;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.6rem;
+}
+
+.team-name {
+  text-align: center;
+  margin-top: 1.2rem;
+  font-size: 1.8rem;
+  color: aqua;
+}
+
+.team-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.heroes-container {
+  display: flex;
+  gap: 2.4rem;
+
+  margin: auto;
+}
+
+.heroes-container button {
+  border: none;
+  background-color: #333;
+}
+
+.add-hero {
+  height: 10rem;
+  width: 10rem;
+  color: aliceblue;
+}
+.search-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20rem;
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.418);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hero-search-input-container {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.616);
+  border-bottom: solid 2px #ddd;
+}
+.search-icon {
+  height: 3.2rem;
+  width: 3.2rem;
+  padding: 0.5rem;
+  /* transform: translate(0, 25%); */
+}
+
+.search-icon:hover,
+.search-icon:active {
+  cursor: pointer;
+}
+
+.hero-search-input-container input {
+  background-color: transparent;
+  border: none;
+  color: aliceblue;
+  width: 24rem;
+
+  padding: 1.2rem;
+}
+
+.search-btn {
+  height: 100%;
+}
+.sugested-heros {
+}
+.battle-section {
+  grid-column: 1/-1;
+  justify-self: center;
+  margin: auto auto 12rem auto;
+}
+.battle-section > button {
+  padding: 2.4rem;
+  font-size: 3.6rem;
+  font-family: "Permanent Marker";
+  font-weight: 600;
+  background-color: transparent;
+  color: red;
+  border: solid red 2px;
+}
+
+.hidden {
+  display: none;
+}
