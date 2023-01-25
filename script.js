@@ -6,6 +6,15 @@ const searchBar = document.getElementById("hero-search");
 
 const sugestedHeroContainer = document.querySelector(".sugested-heroes");
 
+const heroInfoModal = document.querySelector(".hero-stats-modal");
+const heroImgModal = document.querySelector(".hero-stats-modal-img");
+const heroStatsModal = document.querySelector(".hero-stats");
+
+const statcombat = document.querySelector("#combat-stat");
+const statdurability = document.querySelector("#durability-stat");
+const statintelligence = document.querySelector("#intelligence-stat");
+const statSpeed = document.querySelector("#speed-stat");
+
 console.log(addHeroBtn);
 
 addHeroBtn.forEach((el) => {
@@ -27,17 +36,38 @@ const searchHero = function (searchPar) {
   fetch("https://akabab.github.io/superhero-api/api/all.json")
     .then((response) => response.json())
     .then((allHeros) => {
-      const x = [];
+      const heroSugQuery = [];
       allHeros.forEach((hero) => {
         if (
           hero.name.toLowerCase().includes(searchPar.toLowerCase()) &&
-          x.length < 6
+          heroSugQuery.length < 6
         ) {
-          x.push(hero);
+          heroSugQuery.push(hero);
         }
       });
-      renderingSugstedHeroes(x);
+      renderingSugstedHeroes(heroSugQuery);
       const sughero = document.querySelectorAll(".sugested-hero");
+
+      sughero.forEach((hero, index) => {
+        hero.addEventListener("click", () => {
+          heroInfoModal.classList.toggle("hidden");
+          // heroImgModal.currentSrc = "";
+          // heroImgModal.currentSrc = heroSugQuery[index].images.sm;
+          renderingHeroStats(heroSugQuery[index]);
+
+          document
+            .querySelector(".btn-close")
+            .addEventListener("click", () =>
+              heroInfoModal.classList.add("hidden")
+            );
+          for (const prop in heroSugQuery[index].powerstats) {
+            console.log(
+              `Prop:${prop} and :${heroSugQuery[index].powerstats[prop]}`
+            );
+          }
+          console.log(heroSugQuery[index]);
+        });
+      });
 
       console.log(sughero);
     });
@@ -62,11 +92,31 @@ const getFeaturedHero = function () {
     );
 };
 
+const renderingHeroStats = function (stats) {
+  heroStatsModal.innerHTML = "";
+  heroImgModal.currentSrc = "";
+  heroImgModal.src = stats.images.sm;
+
+  for (const poverstatsName in stats.powerstats) {
+    heroStatsModal.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div>${poverstatsName.toUpperCase()}:<span>${
+        stats.powerstats[poverstatsName]
+      }</span></div>
+  
+  
+  
+  `
+    );
+  }
+};
+
 const renderingSugstedHeroes = function (sugestions) {
   sugestedHeroContainer.innerHTML = "";
   sugestions.forEach((hero) => {
     sugestedHeroContainer.insertAdjacentHTML(
-      "afterbegin",
+      "beforeend",
       `
 
       <div class="sugested-hero">

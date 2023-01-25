@@ -74,6 +74,11 @@ footer {
   width: 10rem;
 }
 
+.hero-img:active,
+.hero-img:hover {
+  transform: scale(1.1);
+}
+
 .heroes-container button {
   border: none;
   background-color: #333;
@@ -87,7 +92,7 @@ footer {
 .search-modal {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+
   align-items: center;
   gap: 20rem;
 
@@ -104,6 +109,7 @@ footer {
   display: flex;
   background-color: rgba(0, 0, 0, 0.616);
   border-bottom: solid 2px #ddd;
+  margin-top: 30%;
 }
 .search-icon {
   height: 3.2rem;
@@ -132,6 +138,7 @@ footer {
 .sugested-heroes {
   display: flex;
   gap: 1.2rem;
+  overflow: hidden;
 }
 .battle-section {
   grid-column: 1/-1;
@@ -141,13 +148,56 @@ footer {
 .battle-section > button {
   padding: 2.4rem;
   font-size: 3.6rem;
-  font-family: "Permanent Marker";
+  font-family: "Permanent Marker", sans-serif;
   font-weight: 600;
   background-color: transparent;
   color: red;
   border: solid red 2px;
 }
+.hero-stats-modal {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
 
+  background-color: #fff;
+  width: 22rem;
+}
+.hero-stats-modal-img {
+  width: 100%;
+}
+
+.hero-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.hero-stats > div {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0.5rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #333;
+}
+.hero-stats-btns {
+  display: flex;
+  justify-content: center;
+  gap: 5rem;
+}
+.btn-add,
+.btn-close {
+  padding: 0.5rem;
+  margin: 1rem 0;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(85, 85, 85);
+  color: #fff;
+}
+#combat-stat {
+  justify-self: end;
+}
 .hidden {
   display: none;
 }
