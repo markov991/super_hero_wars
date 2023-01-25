@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="script.js"></script>
+    <script defer src="script.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -23,16 +23,26 @@
       <div class="team-section">
         <h2 class="team-name">Team 1</h2>
         <div class="heroes-container">
-          <button>
-            <ion-icon class="add-hero" name="add-outline"></ion-icon>
+          <div class="selected-heroes-container">
+            <div class="selected-hero">
+              <img
+                class="hero-img"
+                src="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/201-daredevil.jpg"
+                alt=""
+              />
+              <div class="hero-inf"></div>
+            </div>
+          </div>
+          <button class="add-hero-btn">
+            <ion-icon class="add-hero-icon" name="add-outline"></ion-icon>
           </button>
         </div>
       </div>
       <div class="team-section">
         <h2 class="team-name">Team 2</h2>
         <div class="heroes-container">
-          <button>
-            <ion-icon class="add-hero" name="add-outline"></ion-icon>
+          <button class="add-hero-btn">
+            <ion-icon class="add-hero-icon" name="add-outline"></ion-icon>
           </button>
         </div>
       </div>
@@ -50,7 +60,7 @@
         </div>
       </div>
 
-      <div class="sugested-heros"></div>
+      <div class="sugested-heroes"></div>
     </div>
     <script
       type="module"
