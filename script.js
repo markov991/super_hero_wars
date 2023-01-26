@@ -10,18 +10,34 @@ const heroInfoModal = document.querySelector(".hero-stats-modal");
 const heroImgModal = document.querySelector(".hero-stats-modal-img");
 const heroStatsModal = document.querySelector(".hero-stats");
 
+const team1Container = document.querySelector(".team-0");
+const team2Container = document.querySelector(".team-1");
+const team1Heroes = team1Container.children;
+
 const statcombat = document.querySelector("#combat-stat");
 const statdurability = document.querySelector("#durability-stat");
 const statintelligence = document.querySelector("#intelligence-stat");
 const statSpeed = document.querySelector("#speed-stat");
 
-console.log(addHeroBtn);
+const mrk = [];
 
-addHeroBtn.forEach((el) => {
+const team1 = [];
+const team2 = [];
+
+console.log(addHeroBtn);
+let activeSearch;
+
+addEventListener("load", () => {
+  getFeaturedHero(team1);
+  getFeaturedHero(team2);
+  // renderingTeams(team1, team1Container);
+});
+
+addHeroBtn.forEach((el, i) => {
   el.addEventListener("click", () => {
-    if (searchModal.classList.contains("hidden")) {
-      searchModal.classList.toggle("hidden");
-    }
+    activeSearch = i;
+
+    searchModal.classList.toggle("hidden");
   });
 });
 
@@ -51,9 +67,27 @@ const searchHero = function (searchPar) {
       sughero.forEach((hero, index) => {
         hero.addEventListener("click", () => {
           heroInfoModal.classList.toggle("hidden");
-          // heroImgModal.currentSrc = "";
-          // heroImgModal.currentSrc = heroSugQuery[index].images.sm;
+
           renderingHeroStats(heroSugQuery[index]);
+
+          // heroSugQuery se ne prazni kad se dodaju heroji
+
+          document.querySelector(".btn-add").addEventListener("click", () => {
+            if (activeSearch === 0) {
+              addingHeroToTeam(heroSugQuery[index], team1);
+              console.log(heroSugQuery);
+              renderingTeams(team1, team1Container);
+              heroInfoModal.classList.add("hidden");
+              searchModal.classList.add("hidden");
+            }
+            if (activeSearch === 1) {
+              addingHeroToTeam(heroSugQuery[index], team2);
+              console.log(heroSugQuery);
+              renderingTeams(team2, team2Container);
+              heroInfoModal.classList.add("hidden");
+              searchModal.classList.add("hidden");
+            }
+          });
 
           document
             .querySelector(".btn-close")
@@ -82,14 +116,43 @@ document.addEventListener("keyup", (e) => {
   }
 });
 
-// searchHero("bat");
-
-const getFeaturedHero = function () {
+const getFeaturedHero = function (team) {
   fetch("https://akabab.github.io/superhero-api/api/all.json")
     .then((response) => response.json())
-    .then((allHeros) =>
-      console.log(allHeros[Math.trunc(Math.random() * allHeros.length)])
+    .then(
+      (allHeros) => {
+        team.push(allHeros[Math.trunc(Math.random() * allHeros.length)]);
+        renderingTeams(team1, team1Container);
+        renderingTeams(team2, team2Container);
+      }
+      // console.log(allHeros[Math.trunc(Math.random() * allHeros.length)])
     );
+};
+
+const addingHeroToTeam = function (hero, team) {
+  if (!JSON.stringify(team).includes(JSON.stringify(hero))) {
+    team.push(hero);
+  }
+};
+
+const renderingTeams = function (team, container) {
+  container.innerHTML = "";
+
+  team.forEach((hero) => {
+    container.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div class="selected-hero">
+      <img
+        class="hero-img"
+        src="${hero.images.sm}"
+        alt=""
+        />
+        <div class="hero-inf"></div>
+        
+    `
+    );
+  });
 };
 
 const renderingHeroStats = function (stats) {
@@ -125,11 +188,9 @@ const renderingSugstedHeroes = function (sugestions) {
         src="${hero.images.sm}"
         alt=""
       />
-      <p>${hero.name}</p>
+      <p class= "sugested-hero-name">${hero.name}</p>
     </div>
     `
     );
   });
 };
-
-getFeaturedHero();
