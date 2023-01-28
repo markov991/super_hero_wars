@@ -23,6 +23,12 @@ footer {
   padding: 1.2rem;
 }
 
+.hero-name {
+  color: black;
+  font-size: 1.6rem;
+  text-align: center;
+  padding: 1rem;
+}
 .section-header {
   width: 100%;
 
@@ -94,7 +100,7 @@ footer {
   flex-direction: column;
 
   align-items: center;
-  gap: 20rem;
+  gap: 10rem;
 
   position: absolute;
   width: 100%;
@@ -109,7 +115,7 @@ footer {
   display: flex;
   background-color: rgba(0, 0, 0, 0.616);
   border-bottom: solid 2px #ddd;
-  margin-top: 30%;
+  margin-top: 15%;
 }
 .search-icon {
   height: 3.2rem;

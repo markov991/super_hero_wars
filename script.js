@@ -1,4 +1,5 @@
 const addHeroBtn = document.querySelectorAll(".add-hero-btn");
+const selectedHeroes = document.querySelectorAll(".selected-heroes-container");
 
 const searchModal = document.querySelector(".search-modal");
 
@@ -9,29 +10,46 @@ const sugestedHeroContainer = document.querySelector(".sugested-heroes");
 const heroInfoModal = document.querySelector(".hero-stats-modal");
 const heroImgModal = document.querySelector(".hero-stats-modal-img");
 const heroStatsModal = document.querySelector(".hero-stats");
+const heroName = document.querySelector(".hero-name");
 
 const team1Container = document.querySelector(".team-0");
 const team2Container = document.querySelector(".team-1");
-const team1Heroes = team1Container.children;
 
 const statcombat = document.querySelector("#combat-stat");
 const statdurability = document.querySelector("#durability-stat");
 const statintelligence = document.querySelector("#intelligence-stat");
 const statSpeed = document.querySelector("#speed-stat");
 
-const mrk = [];
-
 const team1 = [];
 const team2 = [];
 
-console.log(addHeroBtn);
 let activeSearch;
 
 addEventListener("load", () => {
-  getFeaturedHero(team1);
-  getFeaturedHero(team2);
-  // renderingTeams(team1, team1Container);
+  getFeaturedHeros();
 });
+
+const selectedHeroesInfoModal = function () {
+  const team1Heroes = team1Container.querySelectorAll(".selected-hero");
+
+  team1Heroes.forEach((hero, i) => {
+    hero.addEventListener(
+      "click",
+      () => {
+        console.log(team1[i]);
+
+        heroInfoModal.classList.toggle("hidden");
+        renderingHeroStats(team1[i]);
+        closingHeroStatsModal();
+        // renderingTeams(team1, team1Container);
+        // renderingTeams(team2, team2Container);
+      }
+      // ,
+      // { once: true }
+    );
+  });
+  // hero.removeEventListener("click");
+};
 
 addHeroBtn.forEach((el, i) => {
   el.addEventListener("click", () => {
@@ -72,38 +90,27 @@ const searchHero = function (searchPar) {
 
           // heroSugQuery se ne prazni kad se dodaju heroji
 
-          document.querySelector(".btn-add").addEventListener("click", () => {
-            if (activeSearch === 0) {
-              addingHeroToTeam(heroSugQuery[index], team1);
-              console.log(heroSugQuery);
-              renderingTeams(team1, team1Container);
-              heroInfoModal.classList.add("hidden");
-              searchModal.classList.add("hidden");
-            }
-            if (activeSearch === 1) {
-              addingHeroToTeam(heroSugQuery[index], team2);
-              console.log(heroSugQuery);
-              renderingTeams(team2, team2Container);
-              heroInfoModal.classList.add("hidden");
-              searchModal.classList.add("hidden");
-            }
-          });
-
-          document
-            .querySelector(".btn-close")
-            .addEventListener("click", () =>
-              heroInfoModal.classList.add("hidden")
-            );
-          for (const prop in heroSugQuery[index].powerstats) {
-            console.log(
-              `Prop:${prop} and :${heroSugQuery[index].powerstats[prop]}`
-            );
-          }
-          console.log(heroSugQuery[index]);
+          document.querySelector(".btn-add").addEventListener(
+            "click",
+            () => {
+              if (activeSearch === 0) {
+                addingHeroToTeam(heroSugQuery[index], team1);
+                renderingTeams(team1, team1Container);
+                restartingHeroSearchModal();
+                selectedHeroesInfoModal();
+              }
+              if (activeSearch === 1) {
+                addingHeroToTeam(heroSugQuery[index], team2);
+                renderingTeams(team2, team2Container);
+                restartingHeroSearchModal();
+                selectedHeroesInfoModal();
+              }
+            },
+            { once: true }
+          );
+          closingHeroStatsModal();
         });
       });
-
-      console.log(sughero);
     });
 };
 
@@ -116,17 +123,32 @@ document.addEventListener("keyup", (e) => {
   }
 });
 
-const getFeaturedHero = function (team) {
+const closingHeroStatsModal = function () {
+  document
+    .querySelector(".btn-close")
+    .addEventListener("click", () => heroInfoModal.classList.add("hidden"));
+  renderingTeams(team1, team1Container);
+  renderingTeams(team2, team2Container);
+};
+
+const restartingHeroSearchModal = function () {
+  heroInfoModal.classList.add("hidden");
+  searchModal.classList.add("hidden");
+  sugestedHeroContainer.innerHTML = "";
+  searchBar.value = "";
+};
+
+const getFeaturedHeros = function () {
   fetch("https://akabab.github.io/superhero-api/api/all.json")
     .then((response) => response.json())
-    .then(
-      (allHeros) => {
-        team.push(allHeros[Math.trunc(Math.random() * allHeros.length)]);
-        renderingTeams(team1, team1Container);
-        renderingTeams(team2, team2Container);
-      }
-      // console.log(allHeros[Math.trunc(Math.random() * allHeros.length)])
-    );
+    .then((allHeros) => {
+      team1.push(allHeros[Math.trunc(Math.random() * allHeros.length)]);
+      team2.push(allHeros[Math.trunc(Math.random() * allHeros.length)]);
+
+      renderingTeams(team1, team1Container);
+      renderingTeams(team2, team2Container);
+      selectedHeroesInfoModal();
+    });
 };
 
 const addingHeroToTeam = function (hero, team) {
@@ -156,9 +178,12 @@ const renderingTeams = function (team, container) {
 };
 
 const renderingHeroStats = function (stats) {
+  // console.log("hello");
   heroStatsModal.innerHTML = "";
   heroImgModal.currentSrc = "";
+  document.querySelector(".hero-stats-btns").innerHTML = "";
   heroImgModal.src = stats.images.sm;
+  heroName.innerHTML = stats.name;
 
   for (const poverstatsName in stats.powerstats) {
     heroStatsModal.insertAdjacentHTML(
@@ -173,6 +198,14 @@ const renderingHeroStats = function (stats) {
   `
     );
   }
+
+  document.querySelector(".hero-stats-btns").insertAdjacentHTML(
+    "afterbegin",
+    `
+    <button class="btn-add">Add</button>
+    <button class="btn-close">Close</button>
+  `
+  );
 };
 
 const renderingSugstedHeroes = function (sugestions) {
