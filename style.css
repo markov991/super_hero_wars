@@ -205,7 +205,8 @@ footer {
   gap: 5rem;
 }
 .btn-add,
-.btn-close {
+.btn-close,
+.btn-remove {
   padding: 0.5rem;
   margin: 1rem 0;
   border: none;

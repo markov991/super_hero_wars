@@ -31,6 +31,7 @@ addEventListener("load", () => {
 
 const selectedHeroesInfoModal = function () {
   const team1Heroes = team1Container.querySelectorAll(".selected-hero");
+  const team2Heroes = team2Container.querySelectorAll(".selected-hero");
 
   team1Heroes.forEach((hero, i) => {
     hero.addEventListener(
@@ -38,17 +39,51 @@ const selectedHeroesInfoModal = function () {
       () => {
         console.log(team1[i]);
 
-        heroInfoModal.classList.toggle("hidden");
+        heroInfoModal.classList.remove("hidden");
         renderingHeroStats(team1[i]);
         closingHeroStatsModal();
-        // renderingTeams(team1, team1Container);
-        // renderingTeams(team2, team2Container);
-      }
-      // ,
-      // { once: true }
+        removingHeroFromTeam(team1, i);
+      },
+      { once: true }
     );
   });
+  team2Heroes.forEach((hero, i) => {
+    hero.addEventListener(
+      "click",
+      () => {
+        console.log(team2[i]);
+
+        heroInfoModal.classList.remove("hidden");
+        renderingHeroStats(team2[i]);
+        closingHeroStatsModal();
+        removingHeroFromTeam(team2, i);
+      },
+      { once: true }
+    );
+  });
+
   // hero.removeEventListener("click");
+};
+
+const removingHeroFromTeam = function (team, hero) {
+  const removeBtn = document.querySelector(".btn-remove");
+
+  removeBtn.addEventListener("click", () => {
+    if (team.length < 1) {
+      team.splice(1, hero);
+      heroInfoModal.classList.add("hidden");
+      renderingTeams(team1, team1Container);
+      renderingTeams(team2, team2Container);
+      closingHeroStatsModal();
+    }
+    if (team.length <= 1) {
+      team.pop();
+      heroInfoModal.classList.add("hidden");
+      renderingTeams(team1, team1Container);
+      renderingTeams(team2, team2Container);
+      closingHeroStatsModal();
+    }
+  });
 };
 
 addHeroBtn.forEach((el, i) => {
@@ -126,9 +161,12 @@ document.addEventListener("keyup", (e) => {
 const closingHeroStatsModal = function () {
   document
     .querySelector(".btn-close")
-    .addEventListener("click", () => heroInfoModal.classList.add("hidden"));
+    .addEventListener("click", () => heroInfoModal.classList.add("hidden"), {
+      once: true,
+    });
   renderingTeams(team1, team1Container);
   renderingTeams(team2, team2Container);
+  selectedHeroesInfoModal();
 };
 
 const restartingHeroSearchModal = function () {
@@ -199,13 +237,26 @@ const renderingHeroStats = function (stats) {
     );
   }
 
-  document.querySelector(".hero-stats-btns").insertAdjacentHTML(
-    "afterbegin",
+  if (!searchModal.classList.contains("hidden")) {
+    console.log("Sugested Hero");
+    document.querySelector(".hero-stats-btns").insertAdjacentHTML(
+      "afterbegin",
+      `
+      <button class="btn-add">Add</button>
+      <button class="btn-close">Close</button>
     `
-    <button class="btn-add">Add</button>
-    <button class="btn-close">Close</button>
-  `
-  );
+    );
+  }
+  if (searchModal.classList.contains("hidden")) {
+    console.log("selected hero");
+    document.querySelector(".hero-stats-btns").insertAdjacentHTML(
+      "afterbegin",
+      `
+      <button class="btn-remove">Remove</button>
+      <button class="btn-close">Close</button>
+    `
+    );
+  }
 };
 
 const renderingSugstedHeroes = function (sugestions) {
