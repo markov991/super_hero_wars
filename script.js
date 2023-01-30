@@ -65,6 +65,59 @@ const selectedHeroesInfoModal = function () {
   // hero.removeEventListener("click");
 };
 
+const calTeamStrenght = function () {
+  const team1Score = [].flat();
+  const team2Score = [].flat();
+
+  team1.forEach((hero) => {
+    team1Score.push(
+      Object.values(hero.powerstats).reduce((acc, cur) => acc + cur) /
+        Object.values(hero.powerstats).length
+    );
+  });
+  team2.forEach((hero) => {
+    team2Score.push(
+      Object.values(hero.powerstats).reduce((acc, cur) => acc + cur) /
+        Object.values(hero.powerstats).length
+    );
+  });
+
+  document.querySelector(".battle-result").classList.remove("hidden");
+  document.querySelector(".battle-result").innerHTML = "";
+
+  if (
+    team1Score.reduce((acc, cur) => acc + cur) >
+    team2Score.reduce((acc, cur) => acc + cur)
+  ) {
+    document.querySelector(".battle-result").innerHTML = "TEAM 1 IS WINNER";
+    setTimeout(() => {
+      document.querySelector(".battle-result").classList.add("hidden");
+    }, "3000");
+  }
+  if (
+    team2Score.reduce((acc, cur) => acc + cur) >
+    team1Score.reduce((acc, cur) => acc + cur)
+  ) {
+    document.querySelector(".battle-result").innerHTML = "TEAM 2 IS WINNER";
+    setTimeout(() => {
+      document.querySelector(".battle-result").classList.add("hidden");
+    }, "3000");
+  }
+  if (
+    team2Score.reduce((acc, cur) => acc + cur) ===
+    team1Score.reduce((acc, cur) => acc + cur)
+  ) {
+    document.querySelector(".battle-result").innerHTML = "IT IS A DROW";
+    setTimeout(() => {
+      document.querySelector(".battle-result").classList.add("hidden");
+    }, "3000");
+  }
+};
+
+document
+  .querySelector(".btn-fight")
+  .addEventListener("click", () => calTeamStrenght());
+
 const removingHeroFromTeam = function (team, hero) {
   const removeBtn = document.querySelector(".btn-remove");
 
