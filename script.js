@@ -15,11 +15,6 @@ const heroName = document.querySelector(".hero-name");
 const team1Container = document.querySelector(".team-0");
 const team2Container = document.querySelector(".team-1");
 
-const statcombat = document.querySelector("#combat-stat");
-const statdurability = document.querySelector("#durability-stat");
-const statintelligence = document.querySelector("#intelligence-stat");
-const statSpeed = document.querySelector("#speed-stat");
-
 const team1 = [];
 const team2 = [];
 
@@ -27,42 +22,22 @@ let activeSearch;
 
 addEventListener("load", () => {
   getFeaturedHeros();
+  getRandomHero();
 });
 
-const selectedHeroesInfoModal = function () {
-  const team1Heroes = team1Container.querySelectorAll(".selected-hero");
-  const team2Heroes = team2Container.querySelectorAll(".selected-hero");
+const selectedHeroesInfoModal = function (team, container) {
+  const teamHeroes = container.querySelectorAll(".selected-hero");
 
-  team1Heroes.forEach((hero, i) => {
-    hero.addEventListener(
-      "click",
-      () => {
-        console.log(team1[i], i);
+  teamHeroes.forEach((hero, i) => {
+    hero.addEventListener("click", () => {
+      console.log(team[i], i);
 
-        heroInfoModal.classList.remove("hidden");
-        renderingHeroStats(team1[i]);
-        closingHeroStatsModal();
-        removingHeroFromTeam(team1, i);
-      },
-      { once: true }
-    );
+      heroInfoModal.classList.remove("hidden");
+      renderingHeroStats(team[i]);
+
+      removingHeroFromTeam(team, container, i);
+    });
   });
-  team2Heroes.forEach((hero, i) => {
-    hero.addEventListener(
-      "click",
-      () => {
-        console.log(team2[i], i);
-
-        heroInfoModal.classList.remove("hidden");
-        renderingHeroStats(team2[i]);
-        closingHeroStatsModal();
-        removingHeroFromTeam(team2, i);
-      },
-      { once: true }
-    );
-  });
-
-  // hero.removeEventListener("click");
 };
 
 const calTeamStrenght = function () {
@@ -118,27 +93,20 @@ document.querySelector(".btn-fight").addEventListener("click", () => {
   calTeamStrenght();
 });
 
-const removingHeroFromTeam = function (team, hero) {
+const removingHeroFromTeam = function (team, container, hero) {
   const removeBtn = document.querySelector(".btn-remove");
 
-  removeBtn.addEventListener(
-    "click",
-    () => {
-      team.splice(hero, 1);
-      heroInfoModal.classList.add("hidden");
-      renderingTeams(team1, team1Container);
-      renderingTeams(team2, team2Container);
-      closingHeroStatsModal();
-    },
-    { once: true }
-  );
+  removeBtn.addEventListener("click", () => {
+    team.splice(hero, 1);
+    heroInfoModal.classList.add("hidden");
+    renderingTeams(team, container);
+  });
 };
 
 addHeroBtn.forEach((el, i) => {
   el.addEventListener("click", () => {
     activeSearch = i;
 
-    getRandomHero();
     searchModal.classList.toggle("hidden");
   });
 });
@@ -171,8 +139,6 @@ const searchHero = function (searchPar) {
           heroInfoModal.classList.toggle("hidden");
 
           renderingHeroStats(heroSugQuery[index]);
-
-          addingHeroToTeam(heroSugQuery[index]);
         });
       });
     });
@@ -199,12 +165,7 @@ document.addEventListener("keyup", (e) => {
 const closingHeroStatsModal = function () {
   document
     .querySelector(".btn-close")
-    .addEventListener("click", () => heroInfoModal.classList.add("hidden"), {
-      once: true,
-    });
-  renderingTeams(team1, team1Container);
-  renderingTeams(team2, team2Container);
-  selectedHeroesInfoModal();
+    .addEventListener("click", () => heroInfoModal.classList.add("hidden"));
 };
 
 const restartingHeroSearchModal = function () {
@@ -228,9 +189,6 @@ const getRandomHero = function () {
             allHeros[Math.trunc(Math.random() * allHeros.length)];
 
           renderingHeroStats(randomHero);
-          addingHeroToTeam(randomHero);
-          closingHeroStatsModal();
-          selectedHeroesInfoModal();
         });
     if (activeSearch === 1)
       fetch("https://akabab.github.io/superhero-api/api/all.json")
@@ -241,9 +199,6 @@ const getRandomHero = function () {
             allHeros[Math.trunc(Math.random() * allHeros.length)];
 
           renderingHeroStats(randomHero);
-          addingHeroToTeam(randomHero);
-          closingHeroStatsModal();
-          selectedHeroesInfoModal();
         });
   });
 };
@@ -257,53 +212,42 @@ const getFeaturedHeros = function () {
 
       renderingTeams(team1, team1Container);
       renderingTeams(team2, team2Container);
-      selectedHeroesInfoModal();
     });
 };
 
 const addingHeroToTeam = function (hero) {
-  document.querySelector(".btn-add").addEventListener(
-    "click",
-    () => {
-      if (activeSearch === 0) {
-        if (
-          !JSON.stringify(team1).includes(JSON.stringify(hero)) &&
-          team1.length < 5
-        ) {
-          team1.push(hero);
-        }
-        renderingTeams(team1, team1Container);
-        restartingHeroSearchModal();
-        selectedHeroesInfoModal();
-        // toggleingAddHeroBtn()
+  document.querySelector(".btn-add").addEventListener("click", () => {
+    if (activeSearch === 0) {
+      if (
+        !JSON.stringify(team1).includes(JSON.stringify(hero)) &&
+        team1.length < 5
+      ) {
+        team1.push(hero);
       }
-      if (activeSearch === 1) {
-        if (
-          !JSON.stringify(team2).includes(JSON.stringify(hero)) &&
-          team2.length < 5
-        ) {
-          team2.push(hero);
-        }
-        renderingTeams(team2, team2Container);
-        restartingHeroSearchModal();
-        selectedHeroesInfoModal();
-      }
-    },
-    { once: true }
-  );
-  closingHeroStatsModal();
+      renderingTeams(team1, team1Container);
 
-  // if (!JSON.stringify(team).includes(JSON.stringify(hero)) && team.length < 5) {
-  //   team.push(hero);
-  // }
+      
+    }
+    if (activeSearch === 1) {
+      if (
+        !JSON.stringify(team2).includes(JSON.stringify(hero)) &&
+        team2.length < 5
+      ) {
+        team2.push(hero);
+      }
+      renderingTeams(team2, team2Container);
+      
+    }
+    restartingHeroSearchModal();
+  });
 };
 
 const renderingTeams = function (team, container) {
   const selectedHeroes = container.querySelectorAll(".selected-hero");
 
   selectedHeroes.forEach((hero) => hero.remove());
+
   toggleingAddHeroBtn(team, container);
-  // container.innerHTML = "";
 
   team.forEach((hero) => {
     container.querySelector(".add-hero-btn").insertAdjacentHTML(
@@ -321,10 +265,11 @@ const renderingTeams = function (team, container) {
     `
     );
   });
+
+  selectedHeroesInfoModal(team, container);
 };
 
 const renderingHeroStats = function (stats) {
-  // console.log("hello");
   heroStatsModal.innerHTML = "";
   heroImgModal.currentSrc = "";
   document.querySelector(".hero-stats-btns").innerHTML = "";
@@ -354,6 +299,7 @@ const renderingHeroStats = function (stats) {
       <button class="btn-close">Close</button>
     `
     );
+    addingHeroToTeam(stats);
   }
   if (searchModal.classList.contains("hidden")) {
     console.log("selected hero");
@@ -365,6 +311,7 @@ const renderingHeroStats = function (stats) {
     `
     );
   }
+  closingHeroStatsModal();
 };
 
 const renderingSugstedHeroes = function (sugestions) {
